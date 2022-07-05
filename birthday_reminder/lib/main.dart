@@ -43,11 +43,17 @@ class ListViewTiles extends StatelessWidget {
               endIndent: 10,
             ),
             itemBuilder: (context, index) {
+              String birthday = listBirthdays[index]['name'] +
+                  ' - ' +
+                  listBirthdays[index]['date'];
+
               return Card(
+                margin: const EdgeInsets.only(
+                    left: 15, top: 10, right: 120, bottom: 10),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
                 child: ListTile(
-                  title: Text(listBirthdays[index]['name']),
+                  title: Text(birthday),
                 ),
               );
             },
