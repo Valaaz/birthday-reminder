@@ -1,3 +1,4 @@
+import 'package:birthday_reminder/components/add_birthday_component.dart';
 import 'package:flutter/material.dart';
 
 const List<Map<String, dynamic>> listBirthdays = [
@@ -15,13 +16,6 @@ const List<Map<String, dynamic>> listBirthdays = [
   // {'name': 'Bob Bobby', 'date': '14/12/1988'},
 ];
 
-void _modal(BuildContext context) => showModalBottomSheet(
-      context: context,
-      builder: (context) => const Center(
-        child: Text("Coucou bg"),
-      ),
-    );
-
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -33,10 +27,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: const ListViewTiles(),
       backgroundColor: const Color.fromARGB(255, 135, 84, 144),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _modal(context),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: const AddBirthdayComponent(),
     );
   }
 }
