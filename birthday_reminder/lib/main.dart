@@ -1,4 +1,5 @@
 import 'package:birthday_reminder/screens/home_screen.dart';
+import 'package:birthday_reminder/services/add_birthday/add_birthday_bloc.dart';
 import 'package:birthday_reminder/services/list_birthday/list_birthday_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,6 +24,9 @@ class App extends StatelessWidget {
           create: (context) => ListBirthdayBloc(listBirthdays)
             ..add(OninitializeListBirthdayEvent()),
         ),
+        BlocProvider<AddBirthdayBloc>(
+          create: (context) => AddBirthdayBloc(),
+        )
       ],
       child: MaterialApp(
         title: "Birthday Reminder",
