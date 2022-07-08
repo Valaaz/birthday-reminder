@@ -12,7 +12,6 @@ class AddBirthdayBloc extends Bloc<AddBirthdayEvent, AddBirthdayState> {
       final BirthdayModel birthday =
           BirthdayModel(name: event.name, date: event.date);
 
-      print(birthday);
       emit(AddBirthdaySuccess());
     });
   }
