@@ -24,7 +24,7 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
         context: context,
         builder: (context) => BlocListener<AddBirthdayBloc, AddBirthdayState>(
           listener: (context, state) {
-            if (state is AddBirthdaySuccess) {
+            if (state is AddBirthdaySuccessState) {
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(

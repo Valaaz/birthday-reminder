@@ -9,4 +9,15 @@ abstract class AddBirthdayState extends Equatable {
 
 class AddBirthdayInitial extends AddBirthdayState {}
 
-class AddBirthdaySuccess extends AddBirthdayState {}
+class AddBirthdaySuccessState extends AddBirthdayState {
+  final int timeStamp;
+
+  const AddBirthdaySuccessState({
+    required this.timeStamp,
+  });
+
+  @override
+  List<Object> get props => [
+        timeStamp,
+      ];
+}

@@ -1,16 +1,32 @@
+import 'dart:async';
+
 import 'package:birthday_reminder/models/birthday_model.dart';
 
 class BirthdayRepository {
-  final List<Map<String, dynamic>> listBirthdays = [
-    {'name': 'John Doe', 'date': '25/04/2002'},
-    {'name': 'Valentin Azancoth', 'date': '25/06/2001'},
-    {'name': 'Bob Bobby', 'date': '14/12/1988'},
-  ];
+  final List<Map<String, dynamic>> listBirthdays;
 
-  Stream<List<BirthdayModel>> get birthdays => Stream.value(listBirthdays
-      .map((e) => BirthdayModel(
-            name: e['name'],
-            date: e['date'],
-          ))
-      .toList());
+  BirthdayRepository({
+    required this.listBirthdays,
+  }) {
+    List<BirthdayModel> birthdays = listBirthdays
+        .map((e) => BirthdayModel(name: e['name'], date: e['date']))
+        .toList();
+
+    _birthdayController.add(birthdays);
+  }
+
+  final StreamController<List<BirthdayModel>> _birthdayController =
+      StreamController<List<BirthdayModel>>();
+
+  Stream<List<BirthdayModel>> get birthdays => _birthdayController.stream;
+
+  Future<void> addNewBirthday(Map<String, dynamic> data) async {
+    listBirthdays.add(data);
+
+    List<BirthdayModel> birthdays = listBirthdays
+        .map((e) => BirthdayModel(name: e['name'], date: e['date']))
+        .toList();
+
+    _birthdayController.add(birthdays);
+  }
 }
