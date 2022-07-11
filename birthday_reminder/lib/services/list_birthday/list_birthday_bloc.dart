@@ -1,4 +1,5 @@
 import 'package:birthday_reminder/models/birthday_model.dart';
+import 'package:birthday_reminder/repositories/birthday_repository.dart';
 //import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -7,20 +8,20 @@ part 'list_birthday_event.dart';
 part 'list_birthday_state.dart';
 
 class ListBirthdayBloc extends Bloc<ListBirthdayEvent, ListBirthdayState> {
-  List<Map<String, dynamic>> listBirthdays;
+  final BirthdayRepository birthdayRepository;
 
-  ListBirthdayBloc(this.listBirthdays)
-      : super(ListBirthdayInitialState(
+  ListBirthdayBloc(
+    this.birthdayRepository,
+  ) : super(ListBirthdayInitialState(
             listBirthday: List<BirthdayModel>.from([]))) {
-    on<OninitializeListBirthdayEvent>((event, emit) {
-      List<BirthdayModel> listBirthdayModel = listBirthdays
-          .map((e) => BirthdayModel(
-                name: e["name"],
-                date: e["date"],
-              ))
-          .toList();
+    birthdayRepository.birthdays.listen((birthdays) {
+      add(_OnBirthdayUpdatedListBirthdayEvent(birthdays: birthdays));
+    });
 
-      emit(ListBirthdayInitialState(listBirthday: listBirthdayModel));
+    on<_OnBirthdayUpdatedListBirthdayEvent>((event, emit) {
+      emit(ListBirthdayInitialState(
+        listBirthday: event.birthdays,
+      ));
     });
   }
 }
