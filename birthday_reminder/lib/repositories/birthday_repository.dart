@@ -9,7 +9,8 @@ class BirthdayRepository {
     required this.listBirthdays,
   }) {
     List<BirthdayModel> birthdays = listBirthdays
-        .map((e) => BirthdayModel(name: e['name'], date: e['date']))
+        .map((e) => BirthdayModel(
+            firstname: e['firstname'], surname: e['surname'], date: e['date']))
         .toList();
 
     _birthdayController.add(birthdays);
@@ -24,7 +25,8 @@ class BirthdayRepository {
     listBirthdays.add(data);
 
     List<BirthdayModel> birthdays = listBirthdays
-        .map((e) => BirthdayModel(name: e['name'], date: e['date']))
+        .map((e) => BirthdayModel(
+            firstname: e['firstname'], surname: e['surname'], date: e['date']))
         .toList();
 
     _birthdayController.add(birthdays);

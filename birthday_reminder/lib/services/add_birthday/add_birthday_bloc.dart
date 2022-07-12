@@ -12,7 +12,8 @@ class AddBirthdayBloc extends Bloc<AddBirthdayEvent, AddBirthdayState> {
   AddBirthdayBloc(this.birthdayRepository) : super(AddBirthdayInitial()) {
     on<OnAddBirthdayEvent>((event, emit) async {
       await birthdayRepository.addNewBirthday({
-        "name": event.name,
+        "firstname": event.firstname,
+        "surname": event.surname,
         "date": event.date,
       });
 

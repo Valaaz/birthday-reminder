@@ -8,11 +8,13 @@ abstract class AddBirthdayEvent extends Equatable {
 }
 
 class OnAddBirthdayEvent extends AddBirthdayEvent {
-  final String name;
+  final String firstname;
+  final String surname;
   final String date;
 
   const OnAddBirthdayEvent({
-    required this.name,
+    required this.firstname,
+    required this.surname,
     required this.date,
   });
 }

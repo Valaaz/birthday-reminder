@@ -1,9 +1,11 @@
 class BirthdayModel {
-  final String name;
+  final String firstname;
+  final String surname;
   final String date;
 
   const BirthdayModel({
-    required this.name,
+    required this.firstname,
+    required this.surname,
     required this.date,
   });
 }

@@ -10,11 +10,13 @@ class AddBirthdayComponent extends StatefulWidget {
 }
 
 class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _firstnameController = TextEditingController();
+  final TextEditingController _surnameController = TextEditingController();
 
   @override
   void dispose() {
-    _controller.dispose();
+    _firstnameController.dispose();
+    _surnameController.dispose();
 
     super.dispose();
   }
@@ -51,9 +53,17 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                        hintText: "Entrez le prénom et le nom"),
+                    controller: _firstnameController,
+                    decoration:
+                        const InputDecoration(hintText: "Entrez le prénom"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _surnameController,
+                    decoration:
+                        const InputDecoration(hintText: "Entrez le nom"),
                   ),
                 ),
                 Padding(
@@ -68,26 +78,34 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
                       ),
                       TextButton(
                         onPressed: () {
-                          if (_controller.text.isNotEmpty) {
+                          if (_firstnameController.text.isNotEmpty &&
+                              _surnameController.text.isNotEmpty) {
                             context
                                 .read<AddBirthdayBloc>()
                                 .add(OnAddBirthdayEvent(
-                                  name: _controller.text,
+                                  firstname: _firstnameController.text.trim(),
+                                  surname: _surnameController.text.trim(),
                                   date: "date",
                                 ));
 
-                            _controller.clear();
+                            _firstnameController.clear();
+                            _surnameController.clear();
                           } else {
+                            String emptyText;
+                            _firstnameController.text.isEmpty
+                                ? emptyText = "prénom"
+                                : emptyText = "nom";
+
                             Navigator.pop(context);
 
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                               backgroundColor: Colors.red[800],
-                              content: Row(children: const [
-                                Icon(Icons.error, color: Colors.white),
-                                SizedBox(width: 20),
+                              content: Row(children: [
+                                const Icon(Icons.error, color: Colors.white),
+                                const SizedBox(width: 20),
                                 Expanded(
                                     child: Text(
-                                        "Le prénom ne peut pas être vide")),
+                                        "Le $emptyText ne peut pas être vide")),
                               ]),
                             ));
                           }

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final List<Map<String, dynamic>> listBirthdays = [
-  {'name': 'John Doe', 'date': '25/04/2002'},
-  {'name': 'Valentin Azancoth', 'date': '25/06/2001'},
-  {'name': 'Bob Bobby', 'date': '14/12/1988'},
+  {'firstname': 'John', 'surname': 'Doe', 'date': '25/04/2002'},
+  {'firstname': 'Valentin', 'surname': 'Azancoth', 'date': '25/06/2001'},
+  {'firstname': 'Bob', 'surname': 'Bobby', 'date': '14/12/1988'},
 ];
 
 void main() => runApp(const App());

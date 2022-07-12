@@ -45,7 +45,7 @@ class ListViewTiles extends StatelessWidget {
                 ),
                 itemBuilder: (context, index) {
                   String birthday =
-                      '${listBirthday[index].name} - ${listBirthday[index].date}';
+                      '${listBirthday[index].firstname} ${listBirthday[index].surname} - ${listBirthday[index].date}';
 
                   return Card(
                     margin: const EdgeInsets.only(
