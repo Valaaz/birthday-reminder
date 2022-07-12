@@ -13,6 +13,8 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
 
+  DateTime date = DateTime.now();
+
   @override
   void dispose() {
     _firstnameController.dispose();
@@ -24,120 +26,136 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
   void _modal(BuildContext context) => showModalBottomSheet(
         isScrollControlled: true,
         context: context,
-        builder: (context) => BlocListener<AddBirthdayBloc, AddBirthdayState>(
-          listener: (context, state) {
-            if (state is AddBirthdaySuccessState) {
-              Navigator.pop(context);
+        builder: (context) => StatefulBuilder(
+            builder: ((context, setState) =>
+                BlocListener<AddBirthdayBloc, AddBirthdayState>(
+                  listener: (context, state) {
+                    if (state is AddBirthdaySuccessState) {
+                      Navigator.pop(context);
 
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                backgroundColor: Colors.green[800],
-                content: Row(children: const [
-                  Icon(Icons.check_circle, color: Colors.white),
-                  SizedBox(width: 20),
-                  Expanded(child: Text("L'anniversaire a bien été ajouté")),
-                ]),
-              ));
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Wrap(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Ajouter un nouvel anniversaire",
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _firstnameController,
-                    decoration:
-                        const InputDecoration(hintText: "Entrez le prénom"),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _surnameController,
-                    decoration:
-                        const InputDecoration(hintText: "Entrez le nom"),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton(
-                    child: const Text("Sélectionner une date"),
-                    onPressed: () async {
-                      showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1900, 1, 1),
-                        lastDate: DateTime.now(),
-                        locale: const Locale('fr', 'FR'),
-                      );
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          _firstnameController.clear();
-                          _surnameController.clear();
-                        },
-                        child: Text("Annuler".toUpperCase()),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          if (_firstnameController.text.isNotEmpty &&
-                              _surnameController.text.isNotEmpty) {
-                            context
-                                .read<AddBirthdayBloc>()
-                                .add(OnAddBirthdayEvent(
-                                  firstname: _firstnameController.text.trim(),
-                                  surname: _surnameController.text.trim(),
-                                  date: "date",
-                                ));
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Colors.green[800],
+                        content: Row(children: const [
+                          Icon(Icons.check_circle, color: Colors.white),
+                          SizedBox(width: 20),
+                          Expanded(
+                              child: Text("L'anniversaire a bien été ajouté")),
+                        ]),
+                      ));
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Wrap(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Ajouter un nouvel anniversaire",
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _firstnameController,
+                            decoration: const InputDecoration(
+                                hintText: "Entrez le prénom"),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _surnameController,
+                            decoration: const InputDecoration(
+                                hintText: "Entrez le nom"),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              ElevatedButton(
+                                child: const Text("Sélectionner une date"),
+                                onPressed: () async {
+                                  DateTime? newDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1900, 1, 1),
+                                    lastDate: DateTime.now(),
+                                    locale: const Locale('fr', 'FR'),
+                                  );
 
-                            _firstnameController.clear();
-                            _surnameController.clear();
-                          } else {
-                            String emptyText;
-                            _firstnameController.text.isEmpty
-                                ? emptyText = "prénom"
-                                : emptyText = "nom";
+                                  if (newDate == null) return;
+                                  setState(() => date = newDate);
+                                },
+                              ),
+                              const SizedBox(width: 60),
+                              Text('${date.day}/${date.month}/${date.year}'),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  _firstnameController.clear();
+                                  _surnameController.clear();
+                                },
+                                child: Text("Annuler".toUpperCase()),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  if (_firstnameController.text.isNotEmpty &&
+                                      _surnameController.text.isNotEmpty) {
+                                    context
+                                        .read<AddBirthdayBloc>()
+                                        .add(OnAddBirthdayEvent(
+                                          firstname:
+                                              _firstnameController.text.trim(),
+                                          surname:
+                                              _surnameController.text.trim(),
+                                          date: "date",
+                                        ));
 
-                            Navigator.pop(context);
+                                    _firstnameController.clear();
+                                    _surnameController.clear();
+                                  } else {
+                                    String emptyText;
+                                    _firstnameController.text.isEmpty
+                                        ? emptyText = "prénom"
+                                        : emptyText = "nom";
 
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Colors.red[800],
-                              content: Row(children: [
-                                const Icon(Icons.error, color: Colors.white),
-                                const SizedBox(width: 20),
-                                Expanded(
-                                    child: Text(
-                                        "Le $emptyText ne peut pas être vide")),
-                              ]),
-                            ));
-                          }
-                        },
-                        child: Text("Ajouter".toUpperCase()),
-                      ),
-                    ],
+                                    Navigator.pop(context);
+
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      backgroundColor: Colors.red[800],
+                                      content: Row(children: [
+                                        const Icon(Icons.error,
+                                            color: Colors.white),
+                                        const SizedBox(width: 20),
+                                        Expanded(
+                                            child: Text(
+                                                "Le $emptyText ne peut pas être vide")),
+                                      ]),
+                                    ));
+                                  }
+                                },
+                                child: Text("Ajouter".toUpperCase()),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
+                ))),
       );
 
   @override
