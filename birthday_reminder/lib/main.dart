@@ -4,6 +4,7 @@ import 'package:birthday_reminder/services/add_birthday/add_birthday_bloc.dart';
 import 'package:birthday_reminder/services/list_birthday/list_birthday_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final List<Map<String, dynamic>> listBirthdays = [
   {'firstname': 'John', 'surname': 'Doe', 'date': '25/04/2002'},
@@ -33,6 +34,11 @@ class App extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('fr', 'FR'),
+        ],
         title: "Birthday Reminder",
         theme: ThemeData(primarySwatch: Colors.purple),
         home: const HomeScreen(),

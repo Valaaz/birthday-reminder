@@ -76,6 +76,7 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
                         initialDate: DateTime.now(),
                         firstDate: DateTime(1900, 1, 1),
                         lastDate: DateTime.now(),
+                        locale: const Locale('fr', 'FR'),
                       );
                     },
                   ),
