@@ -12,6 +12,7 @@ class AddBirthdayComponent extends StatefulWidget {
 class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
   final TextEditingController _firstnameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
   DateTime date = DateTime.now();
 
@@ -19,6 +20,7 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
   void dispose() {
     _firstnameController.dispose();
     _surnameController.dispose();
+    _dateController.dispose();
 
     super.dispose();
   }
@@ -106,6 +108,7 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
                                   Navigator.pop(context);
                                   _firstnameController.clear();
                                   _surnameController.clear();
+                                  date = DateTime.now();
                                 },
                                 child: Text("Annuler".toUpperCase()),
                               ),
@@ -120,11 +123,13 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
                                               _firstnameController.text.trim(),
                                           surname:
                                               _surnameController.text.trim(),
-                                          date: "date",
+                                          date:
+                                              '${date.day}/${date.month}/${date.year}',
                                         ));
 
                                     _firstnameController.clear();
                                     _surnameController.clear();
+                                    date = DateTime.now();
                                   } else {
                                     String emptyText;
                                     _firstnameController.text.isEmpty
