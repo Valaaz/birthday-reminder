@@ -67,13 +67,31 @@ class _AddBirthdayComponentState extends State<AddBirthdayComponent> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    child: const Text("Sélectionner une date"),
+                    onPressed: () async {
+                      showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1900, 1, 1),
+                        lastDate: DateTime.now(),
+                      );
+                    },
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _firstnameController.clear();
+                          _surnameController.clear();
+                        },
                         child: Text("Annuler".toUpperCase()),
                       ),
                       TextButton(
