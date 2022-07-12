@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         )
       ],
       child: MaterialApp(
-        localizationsDelegates: const [GlobalMaterialLocalizations.delegate],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         supportedLocales: const [
           Locale('en', 'US'),
           Locale('fr', 'FR'),
