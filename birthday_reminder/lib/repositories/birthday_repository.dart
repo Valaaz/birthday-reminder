@@ -32,6 +32,8 @@ class BirthdayRepository {
     _birthdayController.add(birthdays);
   }
 
+  Future<void> editBirthday(Map<String, dynamic> data) async {}
+
   Future<void> removeBirthday(BirthdayModel birthdayModel) async {
     listBirthdays.removeWhere((e) =>
         e['firstname'] == birthdayModel.firstname &&

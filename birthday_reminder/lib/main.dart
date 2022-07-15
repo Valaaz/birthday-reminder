@@ -1,6 +1,7 @@
 import 'package:birthday_reminder/repositories/birthday_repository.dart';
 import 'package:birthday_reminder/screens/home_screen.dart';
 import 'package:birthday_reminder/services/add_birthday/add_birthday_bloc.dart';
+import 'package:birthday_reminder/services/edit_birthday/edit_birthday_bloc.dart';
 import 'package:birthday_reminder/services/list_birthday/list_birthday_bloc.dart';
 import 'package:birthday_reminder/services/remove_birthday/remove_birthday_bloc.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider<RemoveBirthdayBloc>(
           create: (context) => RemoveBirthdayBloc(birthdayRepository),
+        ),
+        BlocProvider<EditBirthdayBloc>(
+          create: (context) => EditBirthdayBloc(birthdayRepository),
         )
       ],
       child: MaterialApp(
