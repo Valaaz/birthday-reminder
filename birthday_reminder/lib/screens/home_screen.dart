@@ -1,5 +1,6 @@
 import 'package:birthday_reminder/components/add_birthday_component.dart';
 import 'package:birthday_reminder/models/birthday_model.dart';
+import 'package:birthday_reminder/services/edit_birthday/edit_birthday_bloc.dart';
 import 'package:birthday_reminder/services/list_birthday/list_birthday_bloc.dart';
 import 'package:birthday_reminder/services/remove_birthday/remove_birthday_bloc.dart';
 import 'package:flutter/material.dart';
@@ -89,7 +90,7 @@ class ListViewTiles extends StatelessWidget {
                                 );
                               });
                         } else if (direction == DismissDirection.startToEnd) {
-                          // TODO : edit
+                          edit(context, listBirthday[index]);
                           return false;
                         }
                         return null;
@@ -155,4 +156,151 @@ class ListViewTiles extends StatelessWidget {
         break;
     }
   }
+}
+
+void edit(BuildContext context, BirthdayModel birthdayModel) {
+  final TextEditingController firstnameController = TextEditingController();
+  final TextEditingController surnameController = TextEditingController();
+
+  firstnameController.text = birthdayModel.firstname;
+  surnameController.text = birthdayModel.surname;
+
+  DateTime date = DateTime.now();
+
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    builder: (context) => StatefulBuilder(
+        builder: ((context, setState) =>
+            BlocListener<EditBirthdayBloc, EditBirthdayState>(
+              listener: (context, state) {
+                if (state is EditBirthdaySuccessState) {
+                  Navigator.pop(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Colors.green[800],
+                    content: Row(children: const [
+                      Icon(Icons.check_circle, color: Colors.white),
+                      SizedBox(width: 20),
+                      Expanded(
+                          child: Text("L'anniversaire a bien été modifié")),
+                    ]),
+                  ));
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Wrap(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Modifier un anniversaire",
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: firstnameController,
+                        decoration:
+                            const InputDecoration(hintText: "Entrez le prénom"),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: surnameController,
+                        decoration:
+                            const InputDecoration(hintText: "Entrez le nom"),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          ElevatedButton(
+                            child: const Text("Sélectionner une date"),
+                            onPressed: () async {
+                              DateTime? newDate = await showDatePicker(
+                                context: context,
+                                initialDate: DateTime.now(),
+                                firstDate: DateTime(1900, 1, 1),
+                                lastDate: DateTime.now(),
+                                locale: const Locale('fr', 'FR'),
+                              );
+
+                              if (newDate == null) return;
+                              setState(() => date = newDate);
+                            },
+                          ),
+                          const SizedBox(width: 60),
+                          Text('${date.day}/${date.month}/${date.year}'),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                              firstnameController.clear();
+                              surnameController.clear();
+                              date = DateTime.now();
+                            },
+                            child: Text("Annuler".toUpperCase()),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              if (firstnameController.text.isNotEmpty &&
+                                  surnameController.text.isNotEmpty) {
+                                context
+                                    .read<EditBirthdayBloc>()
+                                    .add(OnEditBirthdayEvent(
+                                      firstname:
+                                          firstnameController.text.trim(),
+                                      surname: surnameController.text.trim(),
+                                      date:
+                                          '${date.day}/${date.month}/${date.year}',
+                                    ));
+
+                                firstnameController.clear();
+                                surnameController.clear();
+                                date = DateTime.now();
+                              } else {
+                                String emptyText;
+                                firstnameController.text.isEmpty
+                                    ? emptyText = "prénom"
+                                    : emptyText = "nom";
+
+                                Navigator.pop(context);
+
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  backgroundColor: Colors.red[800],
+                                  content: Row(children: [
+                                    const Icon(Icons.error,
+                                        color: Colors.white),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                        child: Text(
+                                            "Le $emptyText ne peut pas être vide")),
+                                  ]),
+                                ));
+                              }
+                            },
+                            child: Text("Valider".toUpperCase()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ))),
+  );
 }
