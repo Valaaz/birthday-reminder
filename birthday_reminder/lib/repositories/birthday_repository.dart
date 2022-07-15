@@ -31,4 +31,18 @@ class BirthdayRepository {
 
     _birthdayController.add(birthdays);
   }
+
+  Future<void> removeBirthday(BirthdayModel birthdayModel) async {
+    listBirthdays.removeWhere((e) =>
+        e['firstname'] == birthdayModel.firstname &&
+        e['surname'] == birthdayModel.surname &&
+        e['date'] == birthdayModel.date);
+
+    List<BirthdayModel> birthdays = listBirthdays
+        .map((e) => BirthdayModel(
+            firstname: e['firstname'], surname: e['surname'], date: e['date']))
+        .toList();
+
+    _birthdayController.add(birthdays);
+  }
 }
