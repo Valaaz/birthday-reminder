@@ -1,57 +1,106 @@
 import 'dart:async';
 
 import 'package:birthday_reminder/models/birthday_model.dart';
+import 'package:sqflite/sqflite.dart';
 
 class BirthdayRepository {
-  final List<Map<String, dynamic>> listBirthdays;
+  final Database database;
+  final List<Map<String, dynamic>> listBirthdays = [];
+  int nbBirthdays;
 
   BirthdayRepository({
-    required this.listBirthdays,
-  }) {
-    List<BirthdayModel> birthdays = listBirthdays
-        .map((e) => BirthdayModel(
-            firstname: e['firstname'], surname: e['surname'], date: e['date']))
-        .toList();
-
-    _birthdayController.add(birthdays);
-  }
+    required this.database,
+    this.nbBirthdays = 0,
+  });
 
   final StreamController<List<BirthdayModel>> _birthdayController =
       StreamController<List<BirthdayModel>>();
 
   Stream<List<BirthdayModel>> get birthdays => _birthdayController.stream;
 
-  Future<void> addNewBirthday(Map<String, dynamic> data) async {
-    listBirthdays.add(data);
+  Future<void> initialize() async {
+    List<Map<String, dynamic>> maps = await database.query('birthdays');
+    listBirthdays.addAll(maps);
 
     List<BirthdayModel> birthdays = listBirthdays
         .map((e) => BirthdayModel(
-            firstname: e['firstname'], surname: e['surname'], date: e['date']))
+            id: e['id'],
+            firstname: e['firstname'],
+            surname: e['surname'],
+            date: e['date']))
         .toList();
 
     _birthdayController.add(birthdays);
   }
 
+  // ADD
+  Future<void> addNewBirthday(Map<String, dynamic> data) async {
+    final BirthdayModel birthday = BirthdayModel(
+      id: listBirthdays.length + 1,
+      firstname: data['firstname'],
+      surname: data['surname'],
+      date: data['date'],
+    );
+
+    int id = await database.insert(
+      'birthdays',
+      birthday.toJSON(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    listBirthdays.add({
+      ...data,
+      ...{'id': id}
+    });
+
+    List<BirthdayModel> birthdays = listBirthdays
+        .map((e) => BirthdayModel(
+            id: e['id'],
+            firstname: e['firstname'],
+            surname: e['surname'],
+            date: e['date']))
+        .toList();
+
+    _birthdayController.add(birthdays);
+
+    print(id);
+  }
+
+  // EDIT
   Future<void> editBirthday(Map<String, dynamic> data) async {
     listBirthdays.add(data);
 
+    int i = 0;
+
     List<BirthdayModel> birthdays = listBirthdays
         .map((e) => BirthdayModel(
-            firstname: e['firstname'], surname: e['surname'], date: e['date']))
+            id: i++,
+            firstname: e['firstname'],
+            surname: e['surname'],
+            date: e['date']))
         .toList();
 
     _birthdayController.add(birthdays);
   }
 
+  // REMOVE
   Future<void> removeBirthday(BirthdayModel birthdayModel) async {
-    listBirthdays.removeWhere((e) =>
-        e['firstname'] == birthdayModel.firstname &&
-        e['surname'] == birthdayModel.surname &&
-        e['date'] == birthdayModel.date);
+    await database.delete(
+      'birthdays',
+      where: 'id = ?',
+      whereArgs: [
+        birthdayModel.id,
+      ],
+    );
+
+    listBirthdays.removeWhere((e) => e['id'] == birthdayModel.id);
 
     List<BirthdayModel> birthdays = listBirthdays
         .map((e) => BirthdayModel(
-            firstname: e['firstname'], surname: e['surname'], date: e['date']))
+            id: e['id'],
+            firstname: e['firstname'],
+            surname: e['surname'],
+            date: e['date']))
         .toList();
 
     _birthdayController.add(birthdays);

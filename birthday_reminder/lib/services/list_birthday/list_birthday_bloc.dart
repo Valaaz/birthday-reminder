@@ -18,6 +18,14 @@ class ListBirthdayBloc extends Bloc<ListBirthdayEvent, ListBirthdayState> {
       add(_OnBirthdayUpdatedListBirthdayEvent(birthdays: birthdays));
     });
 
+    on<OnInitializeListBirthdayEvent>((event, emit) async {
+      await birthdayRepository.initialize();
+
+      emit(const ListBirthdayInitialState(
+        listBirthday: [],
+      ));
+    });
+
     on<_OnBirthdayUpdatedListBirthdayEvent>((event, emit) {
       emit(ListBirthdayInitialState(
         listBirthday: event.birthdays,

@@ -7,6 +7,8 @@ abstract class ListBirthdayEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class OnInitializeListBirthdayEvent extends ListBirthdayEvent {}
+
 class _OnBirthdayUpdatedListBirthdayEvent extends ListBirthdayEvent {
   final List<BirthdayModel> birthdays;
 
