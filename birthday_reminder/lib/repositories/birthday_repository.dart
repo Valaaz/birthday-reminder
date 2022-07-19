@@ -35,8 +35,18 @@ class BirthdayRepository {
 
   // ADD
   Future<void> addNewBirthday(Map<String, dynamic> data) async {
+    List<Map> result =
+        await database.rawQuery("SELECT MAX(id) as maxID FROM birthdays");
+    var raw = result.first;
+    var lastID = raw['maxID'];
+    if (lastID == null) {
+      lastID = 1;
+    } else {
+      lastID = raw['maxID'] + 1;
+    }
+
     final BirthdayModel birthday = BirthdayModel(
-      id: listBirthdays.length + 1,
+      id: lastID,
       firstname: data['firstname'],
       surname: data['surname'],
       date: data['date'],
@@ -62,8 +72,6 @@ class BirthdayRepository {
         .toList();
 
     _birthdayController.add(birthdays);
-
-    print(id);
   }
 
   // EDIT
