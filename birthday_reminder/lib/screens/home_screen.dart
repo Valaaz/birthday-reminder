@@ -165,7 +165,10 @@ void edit(BuildContext context, BirthdayModel birthdayModel, index) {
   firstnameController.text = birthdayModel.firstname;
   surnameController.text = birthdayModel.surname;
 
-  DateTime date = DateTime.now();
+  final splittedDate = birthdayModel.date.split('/');
+  DateTime formattedDate = DateTime(int.parse(splittedDate[2]),
+      int.parse(splittedDate[1]), int.parse(splittedDate[0]));
+  DateTime date = formattedDate;
 
   showModalBottomSheet(
     isScrollControlled: true,
@@ -224,7 +227,7 @@ void edit(BuildContext context, BirthdayModel birthdayModel, index) {
                             onPressed: () async {
                               DateTime? newDate = await showDatePicker(
                                 context: context,
-                                initialDate: DateTime.now(),
+                                initialDate: date,
                                 firstDate: DateTime(1900, 1, 1),
                                 lastDate: DateTime.now(),
                                 locale: const Locale('fr', 'FR'),
@@ -250,7 +253,7 @@ void edit(BuildContext context, BirthdayModel birthdayModel, index) {
                               Navigator.pop(context);
                               firstnameController.clear();
                               surnameController.clear();
-                              date = DateTime.now();
+                              date = date;
                             },
                             child: Text("Annuler".toUpperCase()),
                           ),
