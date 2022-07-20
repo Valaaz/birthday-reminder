@@ -11,7 +11,7 @@ class EditBirthdayBloc extends Bloc<EditBirthdayEvent, EditBirthdayState> {
 
   EditBirthdayBloc(this.birthdayRepository) : super(EditBirthdayInitial()) {
     on<OnEditBirthdayEvent>((event, emit) async {
-      await birthdayRepository.editBirthday({
+      await birthdayRepository.editBirthday(event.id, event.index, {
         "firstname": event.firstname,
         "surname": event.surname,
         "date": event.date,

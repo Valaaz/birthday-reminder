@@ -8,11 +8,15 @@ abstract class EditBirthdayEvent extends Equatable {
 }
 
 class OnEditBirthdayEvent extends EditBirthdayEvent {
+  final int id;
+  final int index;
   final String firstname;
   final String surname;
   final String date;
 
   const OnEditBirthdayEvent({
+    required this.id,
+    required this.index,
     required this.firstname,
     required this.surname,
     required this.date,

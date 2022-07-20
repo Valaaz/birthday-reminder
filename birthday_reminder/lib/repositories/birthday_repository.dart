@@ -75,14 +75,31 @@ class BirthdayRepository {
   }
 
   // EDIT
-  Future<void> editBirthday(Map<String, dynamic> data) async {
-    listBirthdays.add(data);
+  Future<void> editBirthday(
+      int id, int index, Map<String, dynamic> data) async {
+    final BirthdayModel birthday = BirthdayModel(
+      id: id,
+      firstname: data['firstname'],
+      surname: data['surname'],
+      date: data['date'],
+    );
 
-    int i = 0;
+    await database.update(
+      'birthdays',
+      birthday.toJSON(),
+      where: 'id = ?',
+      whereArgs: [id],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+
+    listBirthdays[index] = {
+      ...data,
+      ...{'id': id}
+    };
 
     List<BirthdayModel> birthdays = listBirthdays
         .map((e) => BirthdayModel(
-            id: i++,
+            id: e['id'],
             firstname: e['firstname'],
             surname: e['surname'],
             date: e['date']))

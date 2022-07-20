@@ -90,7 +90,7 @@ class ListViewTiles extends StatelessWidget {
                                 );
                               });
                         } else if (direction == DismissDirection.startToEnd) {
-                          edit(context, listBirthday[index]);
+                          edit(context, listBirthday[index], index);
                           return false;
                         }
                         return null;
@@ -158,7 +158,7 @@ class ListViewTiles extends StatelessWidget {
   }
 }
 
-void edit(BuildContext context, BirthdayModel birthdayModel) {
+void edit(BuildContext context, BirthdayModel birthdayModel, index) {
   final TextEditingController firstnameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
 
@@ -261,6 +261,8 @@ void edit(BuildContext context, BirthdayModel birthdayModel) {
                                 context
                                     .read<EditBirthdayBloc>()
                                     .add(OnEditBirthdayEvent(
+                                      id: birthdayModel.id,
+                                      index: index,
                                       firstname:
                                           firstnameController.text.trim(),
                                       surname: surnameController.text.trim(),
