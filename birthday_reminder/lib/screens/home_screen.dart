@@ -47,7 +47,11 @@ class ListViewTiles extends StatelessWidget {
           }
 
           return listBirthday.isEmpty
-              ? const Center(child: Text("La liste d'anniversaire est vide"))
+              ? const Center(
+                  child: Text(
+                  "La liste d'anniversaire est vide",
+                  style: TextStyle(color: Colors.white),
+                ))
               : ListView.separated(
                   itemCount: listBirthday.length,
                   separatorBuilder: (context, index) => const Divider(
