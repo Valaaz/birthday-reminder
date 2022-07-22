@@ -63,6 +63,9 @@ class ListViewTiles extends StatelessWidget {
                   itemBuilder: (context, index) {
                     String birthday =
                         '${listBirthday[index].firstname} ${listBirthday[index].surname} - ${listBirthday[index].date}';
+                    final splittedDate = listBirthday[index].date.split('/');
+                    int days = int.parse(splittedDate[0]);
+                    int months = int.parse(splittedDate[1]);
 
                     return Dismissible(
                       key: Key(
@@ -123,9 +126,11 @@ class ListViewTiles extends StatelessWidget {
                             margin: const EdgeInsets.only(right: 15),
                             decoration: const BoxDecoration(
                                 color: Colors.white, shape: BoxShape.circle),
-                            child: const Center(
+                            child: Center(
                                 child: Text(
-                              "365j restants",
+                              daysBetween(DateTime(
+                                      DateTime.now().year, months, days))
+                                  .toString(),
                               textAlign: TextAlign.center,
                             )),
                           ),
@@ -331,4 +336,19 @@ void edit(BuildContext context, BirthdayModel birthdayModel, index) {
               ),
             ))),
   );
+}
+
+int daysBetween(DateTime birthday) {
+  DateTime today = DateTime.now();
+
+  if (today.month == birthday.month) {
+    if (today.day > birthday.day) {
+      birthday = DateTime(birthday.year + 1, birthday.month, birthday.day);
+    }
+  } else if (today.month > birthday.month) {
+    birthday = DateTime(birthday.year + 1, birthday.month, birthday.day);
+  }
+
+  today = DateTime(today.year, today.month, today.day);
+  return (birthday.difference(today).inHours / 24).round();
 }
