@@ -58,7 +58,7 @@ class ListViewTiles extends StatelessWidget {
                     color: Color.fromARGB(255, 56, 4, 65),
                     thickness: 3,
                     indent: 10,
-                    endIndent: 110,
+                    endIndent: 10,
                   ),
                   itemBuilder: (context, index) {
                     String birthday =
@@ -103,14 +103,33 @@ class ListViewTiles extends StatelessWidget {
                           dismissItem(context, index, direction, listBirthday),
                       background: buildSwipeActionLeft(),
                       secondaryBackground: buildSwipeActionRight(),
-                      child: Card(
-                        margin: const EdgeInsets.only(
-                            left: 15, top: 10, right: 120, bottom: 10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        child: ListTile(
-                          title: Text(birthday),
-                        ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Card(
+                              margin: const EdgeInsets.only(
+                                  left: 15, top: 10, bottom: 10),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15)),
+                              child: ListTile(
+                                title: Text(birthday),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Container(
+                            height: 65,
+                            width: 65,
+                            margin: const EdgeInsets.only(right: 15),
+                            decoration: const BoxDecoration(
+                                color: Colors.white, shape: BoxShape.circle),
+                            child: const Center(
+                                child: Text(
+                              "365j restants",
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                        ],
                       ),
                     );
                   },
