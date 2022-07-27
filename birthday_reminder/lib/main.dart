@@ -64,7 +64,7 @@ class App extends StatelessWidget {
         ],
         title: "Birthday Reminder",
         theme: ThemeData(primarySwatch: Colors.purple),
-        home: const HomeScreen(),
+        home: HomeScreen(birthdayRepository: birthdayRepository),
         debugShowCheckedModeBanner: false,
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:birthday_reminder/components/add_birthday_component.dart';
 import 'package:birthday_reminder/models/birthday_model.dart';
+import 'package:birthday_reminder/repositories/birthday_repository.dart';
 import 'package:birthday_reminder/screens/birthday_screen.dart';
 import 'package:birthday_reminder/services/edit_birthday/edit_birthday_bloc.dart';
 import 'package:birthday_reminder/services/list_birthday/list_birthday_bloc.dart';
@@ -9,7 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key, required this.birthdayRepository})
+      : super(key: key);
+
+  final BirthdayRepository birthdayRepository;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     notificationService = NotificationService();
     notificationService.initialize();
     listenNotification();
+    checkBirthday(widget.birthdayRepository);
   }
 
   @override
@@ -32,13 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("Birthday Reminder"),
       ),
-      body: ElevatedButton(
-        onPressed: () async {
-          await notificationService.showNotificationPayload(
-              id: 0, title: 'title', body: 'body', payload: 'payload');
-        },
-        child: const Text("Notif"),
-      ), //const ListViewTiles(),
+      body: const ListViewTiles(),
       backgroundColor: const Color.fromARGB(255, 135, 84, 144),
       floatingActionButton: const AddBirthdayComponent(),
     );
@@ -54,6 +53,25 @@ class _HomeScreenState extends State<HomeScreen> {
           MaterialPageRoute(
               builder: ((context) => BirthdayScreen(payload: payload))));
     }
+  }
+
+  void checkBirthday(BirthdayRepository birthdayRepository) {
+    int count = 0;
+
+    birthdayRepository.birthdays.forEach((element) {
+      for (var e in element) {
+        final splittedDate = e.date.split('/');
+        int days = int.parse(splittedDate[0]);
+        int months = int.parse(splittedDate[1]);
+        if (daysBetween(DateTime(DateTime.now().year, months, days)) == 0) {
+          notificationService.showNotificationPayload(
+              id: count++,
+              title: 'Il y a un anniversaire !',
+              body: "C'est l'anniversaire de ${e.firstname} ${e.surname}",
+              payload: 'payload');
+        }
+      }
+    });
   }
 }
 

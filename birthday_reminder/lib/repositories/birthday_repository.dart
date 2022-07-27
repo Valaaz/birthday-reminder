@@ -14,7 +14,7 @@ class BirthdayRepository {
   });
 
   final StreamController<List<BirthdayModel>> _birthdayController =
-      StreamController<List<BirthdayModel>>();
+      StreamController<List<BirthdayModel>>.broadcast();
 
   Stream<List<BirthdayModel>> get birthdays => _birthdayController.stream;
 
