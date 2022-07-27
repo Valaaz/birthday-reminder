@@ -1,13 +1,30 @@
 import 'package:birthday_reminder/components/add_birthday_component.dart';
 import 'package:birthday_reminder/models/birthday_model.dart';
+import 'package:birthday_reminder/screens/birthday_screen.dart';
 import 'package:birthday_reminder/services/edit_birthday/edit_birthday_bloc.dart';
 import 'package:birthday_reminder/services/list_birthday/list_birthday_bloc.dart';
+import 'package:birthday_reminder/services/notification/notification_service.dart';
 import 'package:birthday_reminder/services/remove_birthday/remove_birthday_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final NotificationService notificationService;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationService = NotificationService();
+    notificationService.initialize();
+    listenNotification();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +32,28 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Birthday Reminder"),
       ),
-      body: const ListViewTiles(),
+      body: ElevatedButton(
+        onPressed: () async {
+          await notificationService.showNotificationPayload(
+              id: 0, title: 'title', body: 'body', payload: 'payload');
+        },
+        child: const Text("Notif"),
+      ), //const ListViewTiles(),
       backgroundColor: const Color.fromARGB(255, 135, 84, 144),
       floatingActionButton: const AddBirthdayComponent(),
     );
+  }
+
+  void listenNotification() => notificationService.onNotificationClick.stream
+      .listen(onNotificationListener);
+
+  void onNotificationListener(String? payload) {
+    if (payload != null && payload.isNotEmpty) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: ((context) => BirthdayScreen(payload: payload))));
+    }
   }
 }
 
@@ -128,9 +163,7 @@ class ListViewTiles extends StatelessWidget {
                                 color: Colors.white, shape: BoxShape.circle),
                             child: Center(
                                 child: Text(
-                              daysBetween(DateTime(
-                                      DateTime.now().year, months, days))
-                                  .toString(),
+                              "${daysBetween(DateTime(DateTime.now().year, months, days))}j restants",
                               textAlign: TextAlign.center,
                             )),
                           ),
